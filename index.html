@@ -811,6 +811,70 @@ int main() {
 }
       </code>
     </div> 
+    <!-- Set Operations using ONLY #include <set> -->
+<div class="card">
+  <div class="card-header">
+    <h3>12. Set Operations (Spanish & German) – STL set only</h3>
+    <button onclick="copyCode('code12', this)">Copy</button>
+  </div>
+  <pre><code>📋 Sample run in comments</code></pre>
+  <code id="code12" class="hidden">
+/*
+  Experiment 12: Sets of attendees using ONLY #include &lt;set&gt;
+  Sample: S={101,102,103}, G={102,104}
+  Union: 101 102 103 104
+  Intersection: 102
+  Difference S-G: 101 103
+*/
+#include &lt;iostream&gt;
+#include &lt;set&gt;
+using namespace std;
+
+void inputSet(set&lt;int&gt; &amp;s, char name) {
+    int n, val;
+    cout &lt;&lt; "Number of attendees speaking " &lt;&lt; name &lt;&lt; ": ";
+    cin &gt;&gt; n;
+    cout &lt;&lt; "Enter IDs: ";
+    for (int i = 0; i &lt; n; i++) {
+        cin &gt;&gt; val;
+        s.insert(val);
+    }
+}
+
+void display(const set&lt;int&gt; &amp;s) {
+    for (int x : s) cout &lt;&lt; x &lt;&lt; " ";
+    cout &lt;&lt; endl;
+}
+
+int main() {
+    set&lt;int&gt; Spanish, German;
+    
+    inputSet(Spanish, 'S');
+    inputSet(German, 'G');
+    
+    // Union: all elements from both sets
+    set&lt;int&gt; UnionSet = Spanish;
+    for (int x : German) UnionSet.insert(x);
+    cout &lt;&lt; "Union: "; display(UnionSet);
+    
+    // Intersection: common elements
+    set&lt;int&gt; InterSet;
+    for (int x : Spanish)
+        if (German.find(x) != German.end())
+            InterSet.insert(x);
+    cout &lt;&lt; "Intersection: "; display(InterSet);
+    
+    // Difference (S - G): in Spanish but not German
+    set&lt;int&gt; DiffSet;
+    for (int x : Spanish)
+        if (German.find(x) == German.end())
+            DiffSet.insert(x);
+    cout &lt;&lt; "Difference (S - G): "; display(DiffSet);
+    
+    return 0;
+}
+  </code>
+</div>
     <!-- Bonus: Hash Table (if needed) -->
     <div class="card">
       <div class="card-header">
@@ -872,4 +936,7 @@ int main() { /* test code */ return 0; }
     }
   </script>
 </body>
-</html>
+</html> 
+
+
+
