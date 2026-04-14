@@ -2,28 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ADS Practical Exam – All Codes</title>
+  <title>ADS Practical Exam – All Codes (Simple)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: Arial, sans-serif;
       margin: 20px;
       background: #1e1e1e;
       color: #f4f4f9;
     }
-    h1 { margin-bottom: 5px; font-size: 26px; font-weight: 400; letter-spacing: 0.5px; }
-    .sub { color: #aaa; margin-top: 0; margin-bottom: 25px; }
+    h1 { margin-bottom: 10px; font-size: 22px; font-weight: 400; letter-spacing: 0.5px; }
     .container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
     }
     .card {
       background: #2b2b2b;
       border: 1px solid #444;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
     }
@@ -31,54 +30,60 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .card-header h3 {
       margin: 0;
-      font-size: 16px;
-      line-height: 1.3;
+      font-size: 15px;
+      line-height: 1.2;
       color: #b0e0ff;
     }
     button {
       background: #007bff;
       color: white;
       border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 5px;
       cursor: pointer;
       font-size: 13px;
-      transition: 0.2s;
-      font-weight: 500;
+      transition: 0.25s;
+      flex-shrink: 0;
     }
-    button.copied { background: #28a745; }
+    button.copied { background: #28a745; transform: scale(0.98); }
     pre {
       background: #1e1e1e;
-      color: #ddd;
-      padding: 12px;
-      border-radius: 8px;
+      color: #ccc;
+      padding: 10px;
+      border-radius: 6px;
       font-size: 13px;
-      max-height: 300px;
-      overflow: auto;
-      margin: 8px 0 4px;
+      max-height: 220px;
+      overflow: hidden;
+      position: relative;
+      margin: 8px 0 4px 0;
       border: 1px solid #3a3a3a;
-      white-space: pre-wrap;
-      word-break: break-word;
     }
-    code { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; }
+    pre::after {
+      content: "...";
+      position: absolute;
+      bottom: 6px;
+      right: 10px;
+      background: #1e1e1e;
+      padding: 0 4px;
+      color: #888;
+    }
+    code { font-family: 'Consolas', 'Monaco', monospace; white-space: pre-wrap; }
     .hidden { display: none; }
-    footer { margin-top: 30px; color: #888; font-size: 13px; text-align: center; border-top: 1px solid #333; padding-top: 15px; }
+    footer { margin-top: 24px; color: #888; font-size: 13px; text-align: center; border-top: 1px solid #333; padding-top: 15px; }
   </style>
 </head>
 <body>
-  <!-- <h1>📘 ADS Practical Exam – Complete Code Reference</h1>
-  <div class="sub">All 13 experiments in order · Each code includes sample output as comment</div> -->
-
+  <h1>📘 ADS Practical Exam – Simple C++ Codes</h1>
   <div class="container">
 
-    <!-- 1. Bookstore BST -->
+    <!-- 1. Bookstore BST (Simple version without delete) -->
     <div class="card">
       <div class="card-header">
-        <h3>1. Bookstore BST (insert, search, delete, update)</h3>
+        <h3>1. Bookstore BST – insert, search, update, display</h3>
         <button onclick="copyCode('code1', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
@@ -86,105 +91,103 @@
 /*
   Experiment 1: Online Bookstore using BST
   Sample Input/Output:
-    Add: "C++ Primer", "Lippman", 45.5
-    Add: "Clean Code", "Martin", 50.0
-    Search: "Clean Code" -> Found: Clean Code | Martin | 50
-    Update: "C++ Primer" price to 49.99
-    Display (inorder): C++ Primer | Lippman | 49.99   Clean Code | Martin | 50
+    1. Add: "C++ Primer", "Lippman", 45.5
+    2. Add: "Clean Code", "Martin", 50.0
+    3. Search "Clean Code" -> Found
+    4. Update "C++ Primer" price to 49.99
+    5. Display (inorder)
 */
 #include &lt;iostream&gt;
-#include &lt;string&gt;
+#include &lt;cstring&gt;
 using namespace std;
 
 struct Book {
-    string title, author;
+    char title[50], author[50];
     float price;
     Book *left, *right;
-    Book(string t, string a, float p) : title(t), author(a), price(p), left(NULL), right(NULL) {}
 };
 
-class BST {
-    Book *root;
-    Book* insert(Book* node, string t, string a, float p) {
-        if (!node) return new Book(t, a, p);
-        if (t &lt; node-&gt;title) node-&gt;left = insert(node-&gt;left, t, a, p);
-        else if (t &gt; node-&gt;title) node-&gt;right = insert(node-&gt;right, t, a, p);
-        return node;
-    }
-    Book* search(Book* node, string t) {
-        if (!node || node-&gt;title == t) return node;
-        if (t &lt; node-&gt;title) return search(node-&gt;left, t);
-        return search(node-&gt;right, t);
-    }
-    Book* findMin(Book* node) {
-        while (node &amp;&amp; node-&gt;left) node = node-&gt;left;
-        return node;
-    }
-    Book* remove(Book* node, string t) {
-        if (!node) return NULL;
-        if (t &lt; node-&gt;title) node-&gt;left = remove(node-&gt;left, t);
-        else if (t &gt; node-&gt;title) node-&gt;right = remove(node-&gt;right, t);
-        else {
-            if (!node-&gt;left) { Book* temp = node-&gt;right; delete node; return temp; }
-            if (!node-&gt;right) { Book* temp = node-&gt;left; delete node; return temp; }
-            Book* temp = findMin(node-&gt;right);
-            node-&gt;title = temp-&gt;title;
-            node-&gt;author = temp-&gt;author;
-            node-&gt;price = temp-&gt;price;
-            node-&gt;right = remove(node-&gt;right, temp-&gt;title);
-        }
-        return node;
-    }
-    void inorder(Book* node) {
-        if (!node) return;
-        inorder(node-&gt;left);
-        cout &lt;&lt; node-&gt;title &lt;&lt; " | " &lt;&lt; node-&gt;author &lt;&lt; " | $" &lt;&lt; node-&gt;price &lt;&lt; endl;
-        inorder(node-&gt;right);
-    }
-public:
-    BST() : root(NULL) {}
-    void add(string t, string a, float p) { root = insert(root, t, a, p); }
-    void searchBook(string t) {
-        Book* res = search(root, t);
-        if (res) cout &lt;&lt; "Found: " &lt;&lt; res-&gt;title &lt;&lt; " | " &lt;&lt; res-&gt;author &lt;&lt; " | $" &lt;&lt; res-&gt;price &lt;&lt; endl;
-        else cout &lt;&lt; "Not found\n";
-    }
-    void updatePrice(string t, float newPrice) {
-        Book* res = search(root, t);
-        if (res) { res-&gt;price = newPrice; cout &lt;&lt; "Updated\n"; }
-        else cout &lt;&lt; "Not found\n";
-    }
-    void deleteBook(string t) { root = remove(root, t); cout &lt;&lt; "Deleted (if existed)\n"; }
-    void display() { inorder(root); }
-};
+Book* createBook(char t[], char a[], float p) {
+    Book* b = new Book;
+    strcpy(b-&gt;title, t);
+    strcpy(b-&gt;author, a);
+    b-&gt;price = p;
+    b-&gt;left = b-&gt;right = NULL;
+    return b;
+}
+
+Book* insert(Book* root, char t[], char a[], float p) {
+    if (!root) return createBook(t, a, p);
+    if (strcmp(t, root-&gt;title) &lt; 0)
+        root-&gt;left = insert(root-&gt;left, t, a, p);
+    else if (strcmp(t, root-&gt;title) &gt; 0)
+        root-&gt;right = insert(root-&gt;right, t, a, p);
+    return root;
+}
+
+Book* search(Book* root, char t[]) {
+    if (!root || strcmp(root-&gt;title, t) == 0) return root;
+    if (strcmp(t, root-&gt;title) &lt; 0)
+        return search(root-&gt;left, t);
+    return search(root-&gt;right, t);
+}
+
+void inorder(Book* root) {
+    if (!root) return;
+    inorder(root-&gt;left);
+    cout &lt;&lt; root-&gt;title &lt;&lt; " | " &lt;&lt; root-&gt;author &lt;&lt; " | $" &lt;&lt; root-&gt;price &lt;&lt; endl;
+    inorder(root-&gt;right);
+}
 
 int main() {
-    BST store;
-    store.add("C++ Primer", "Lippman", 45.5);
-    store.add("Clean Code", "Martin", 50.0);
-    store.searchBook("Clean Code");
-    store.updatePrice("C++ Primer", 49.99);
-    store.display();
-    store.deleteBook("Clean Code");
+    Book* root = NULL;
+    int choice;
+    char title[50], author[50];
+    float price;
+
+    do {
+        cout &lt;&lt; "\n1.Add 2.Search 3.Update 4.Display 5.Exit\nChoice: ";
+        cin &gt;&gt; choice; cin.ignore();
+        if (choice == 1) {
+            cout &lt;&lt; "Title: "; cin.getline(title, 50);
+            cout &lt;&lt; "Author: "; cin.getline(author, 50);
+            cout &lt;&lt; "Price: "; cin &gt;&gt; price;
+            root = insert(root, title, author, price);
+        } else if (choice == 2) {
+            cout &lt;&lt; "Title: "; cin.getline(title, 50);
+            Book* res = search(root, title);
+            if (res) cout &lt;&lt; "Found: " &lt;&lt; res-&gt;title &lt;&lt; " | " &lt;&lt; res-&gt;author &lt;&lt; " | $" &lt;&lt; res-&gt;price &lt;&lt; endl;
+            else cout &lt;&lt; "Not found\n";
+        } else if (choice == 3) {
+            cout &lt;&lt; "Title: "; cin.getline(title, 50);
+            Book* res = search(root, title);
+            if (res) {
+                cout &lt;&lt; "New price: "; cin &gt;&gt; price;
+                res-&gt;price = price;
+                cout &lt;&lt; "Updated\n";
+            } else cout &lt;&lt; "Not found\n";
+        } else if (choice == 4) {
+            inorder(root);
+        }
+    } while (choice != 5);
     return 0;
 }
       </code>
     </div>
 
-    <!-- 2. Threaded Binary Tree -->
+    <!-- 2. Threaded Binary Tree (Simple) -->
     <div class="card">
       <div class="card-header">
-        <h3>2. Threaded Binary Tree (insert, inorder, search)</h3>
+        <h3>2. Threaded Binary Tree – insert, inorder, search</h3>
         <button onclick="copyCode('code2', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code2" class="hidden">
 /*
   Experiment 2: Threaded Binary Tree
-  Sample Input/Output:
-    Insert: 20, 10, 30, 5, 15
-    Inorder: 5 10 15 20 30
-    Search 15: Found
+  Sample Input: 20, 10, 30, 5, 15
+  Inorder: 5 10 15 20 30
+  Search 15: Found
 */
 #include&lt;iostream&gt;
 using namespace std;
@@ -208,10 +211,7 @@ void insert(int key) {
         }
     }
     node *nn = new node{key, NULL, NULL, 1, 1};
-    if (!parent) {
-        root = nn;
-        return;
-    }
+    if (!parent) { root = nn; return; }
     if (key &lt; parent-&gt;data) {
         nn-&gt;left = parent-&gt;left;
         nn-&gt;right = parent;
@@ -253,30 +253,32 @@ void search(int key) {
 }
 
 int main() {
-    int arr[] = {20,10,30,5,15};
-    for(int x: arr) insert(x);
-    cout &lt;&lt; "Inorder: "; inorder(); cout &lt;&lt; endl;
-    search(15);
-    search(100);
+    int choice, val;
+    do {
+        cout &lt;&lt; "\n1.Insert 2.Inorder 3.Search 4.Exit\nChoice: ";
+        cin &gt;&gt; choice;
+        if (choice == 1) { cin &gt;&gt; val; insert(val); }
+        else if (choice == 2) { inorder(); cout &lt;&lt; endl; }
+        else if (choice == 3) { cin &gt;&gt; val; search(val); }
+    } while (choice != 4);
     return 0;
 }
       </code>
     </div>
 
-    <!-- 3. AVL Tree -->
+    <!-- 3. AVL Tree (Simple version) -->
     <div class="card">
       <div class="card-header">
-        <h3>3. AVL Tree (insert, search, balance)</h3>
+        <h3>3. AVL Tree – insert, search, balance</h3>
         <button onclick="copyCode('code3', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code3" class="hidden">
 /*
   Experiment 3: AVL Tree (Height Balanced)
-  Sample Input/Output:
-    Insert 10,20,30 → triggers rotations
-    Inorder: 10 20 30
-    Search 20: Found
+  Sample: insert 10,20,30 (rotations happen)
+  Inorder: 10 20 30
+  Search 20: Found
 */
 #include&lt;iostream&gt;
 using namespace std;
@@ -330,10 +332,14 @@ bool search(Node *r, int val) {
 
 int main() {
     Node *root = NULL;
-    int vals[] = {10,20,30,40,50,25};
-    for(int v: vals) root = insert(root, v);
-    cout &lt;&lt; "Inorder: "; inorder(root); cout &lt;&lt; endl;
-    cout &lt;&lt; "Search 30: " &lt;&lt; (search(root,30)?"Found":"Not found") &lt;&lt; endl;
+    int choice, val;
+    do {
+        cout &lt;&lt; "\n1.Insert 2.Inorder 3.Search 4.Exit\nChoice: ";
+        cin &gt;&gt; choice;
+        if (choice == 1) { cin &gt;&gt; val; root = insert(root, val); }
+        else if (choice == 2) { inorder(root); cout &lt;&lt; endl; }
+        else if (choice == 3) { cin &gt;&gt; val; cout &lt;&lt; (search(root,val)?"Found\n":"Not found\n"); }
+    } while (choice != 4);
     return 0;
 }
       </code>
@@ -349,14 +355,12 @@ int main() {
       <code id="code4" class="hidden">
 /*
   Experiment 4: BFS on Graph
-  Sample Input:
-    Vertices=5, Edges: 0-1,0-2,1-3,1-4
+  Input: vertices=5, edges: 0-1,0-2,1-3,1-4
   Output: BFS from 0: 0 1 2 3 4
 */
 #include&lt;iostream&gt;
 using namespace std;
-#define MAX 10
-
+#define MAX 5
 int adj[MAX][MAX], visited[MAX], n, e;
 int queue[MAX], front=0, rear=-1;
 
@@ -380,7 +384,9 @@ void BFS(int start) {
 }
 
 int main() {
-    cout &lt;&lt; "Vertices edges: "; cin &gt;&gt; n &gt;&gt; e;
+    cout &lt;&lt; "Vertices: "; cin &gt;&gt; n;
+    cout &lt;&lt; "Edges: "; cin &gt;&gt; e;
+    cout &lt;&lt; "Enter edges (u v):\n";
     for(int i=0;i&lt;e;i++) { int u,v; cin &gt;&gt; u &gt;&gt; v; adj[u][v]=adj[v][u]=1; }
     cout &lt;&lt; "BFS: "; BFS(0);
     return 0;
@@ -388,24 +394,56 @@ int main() {
       </code>
     </div>
 
-    
-
-    <!-- 6. DFS using Stack (Iterative) -->
+    <!-- 5. DFS Recursive -->
     <div class="card">
       <div class="card-header">
-        <h3>5. DFS using Stack (Iterative)</h3>
+        <h3>5. DFS Recursive (Graph)</h3>
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </div>
+      <pre><code>📋 Sample run in comments</code></pre>
+      <code id="code5" class="hidden">
+/*
+  Experiment 5: DFS Recursive
+  Output: DFS from 0: 0 1 3 4 2
+*/
+#include&lt;iostream&gt;
+using namespace std;
+#define MAX 5
+int adj[MAX][MAX], visited[MAX], n, e;
+
+void DFS(int v) {
+    visited[v]=1;
+    cout &lt;&lt; v &lt;&lt; " ";
+    for(int i=0;i&lt;n;i++)
+        if(adj[v][i] &amp;&amp; !visited[i])
+            DFS(i);
+}
+
+int main() {
+    cout &lt;&lt; "Vertices: "; cin &gt;&gt; n;
+    cout &lt;&lt; "Edges: "; cin &gt;&gt; e;
+    cout &lt;&lt; "Enter edges (u v):\n";
+    for(int i=0;i&lt;e;i++) { int u,v; cin &gt;&gt; u &gt;&gt; v; adj[u][v]=adj[v][u]=1; }
+    cout &lt;&lt; "DFS: "; DFS(0);
+    return 0;
+}
+      </code>
+    </div>
+
+    <!-- 6. DFS using Stack -->
+    <div class="card">
+      <div class="card-header">
+        <h3>6. DFS using Stack (Iterative)</h3>
         <button onclick="copyCode('code6', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code6" class="hidden">
 /*
-  Experiment 6 (variant): DFS using explicit stack
-  Sample output similar to recursive DFS.
+  Experiment 6: DFS using explicit stack
 */
 #include&lt;iostream&gt;
 using namespace std;
-#define MAX 10
-
+#define MAX 5
 int adj[MAX][MAX], visited[MAX], n, e;
 
 void DFS_stack(int start) {
@@ -416,7 +454,7 @@ void DFS_stack(int start) {
         if(!visited[v]) {
             visited[v]=1;
             cout &lt;&lt; v &lt;&lt; " ";
-            for(int i=n-1; i&gt;=0; i--)   // reverse for natural order
+            for(int i=n-1; i&gt;=0; i--)
                 if(adj[v][i] &amp;&amp; !visited[i])
                     stack[++top]=i;
         }
@@ -424,7 +462,9 @@ void DFS_stack(int start) {
 }
 
 int main() {
-    cout &lt;&lt; "Vertices edges: "; cin &gt;&gt; n &gt;&gt; e;
+    cout &lt;&lt; "Vertices: "; cin &gt;&gt; n;
+    cout &lt;&lt; "Edges: "; cin &gt;&gt; e;
+    cout &lt;&lt; "Enter edges (u v):\n";
     for(int i=0;i&lt;e;i++) { int u,v; cin &gt;&gt; u &gt;&gt; v; adj[u][v]=adj[v][u]=1; }
     cout &lt;&lt; "DFS (stack): "; DFS_stack(0);
     return 0;
@@ -435,19 +475,17 @@ int main() {
     <!-- 7. Transportation Network (Graph representation) -->
     <div class="card">
       <div class="card-header">
-        <h3>6. Transportation Network (Graph Input/Display)</h3>
+        <h3>7. Transportation Network (Graph Input/Display)</h3>
         <button onclick="copyCode('code7', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code7" class="hidden">
 /*
   Experiment 7: Represent transportation network using adjacency matrix.
-  Input: cities and routes, display matrix.
 */
 #include&lt;iostream&gt;
 using namespace std;
 #define MAX 10
-
 int graph[MAX][MAX], n;
 
 void display() {
@@ -476,14 +514,13 @@ int main() {
     <!-- 8. Prim's MST -->
     <div class="card">
       <div class="card-header">
-        <h3>7. Prim's Algorithm (MST)</h3>
+        <h3>8. Prim's Algorithm (MST)</h3>
         <button onclick="copyCode('code8', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code8" class="hidden">
 /*
   Experiment 8: Prim's MST
-  Sample: cities=5, edges as given
   Output: edges of MST and total cost.
 */
 #include&lt;iostream&gt;
@@ -513,17 +550,16 @@ int main() {
       </code>
     </div>
 
-    <!-- 9. Kruskal's Algorithm (added) -->
+    <!-- 9. Kruskal's Algorithm -->
     <div class="card">
       <div class="card-header">
-        <h3>8. Kruskal's Algorithm (MST)</h3>
+        <h3>9. Kruskal's Algorithm (MST)</h3>
         <button onclick="copyCode('code9', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code9" class="hidden">
 /*
   Experiment 9: Kruskal's MST using DSU
-  Sample output similar to Prim's.
 */
 #include&lt;iostream&gt;
 #include&lt;algorithm&gt;
@@ -534,10 +570,7 @@ bool cmp(Edge a, Edge b) { return a.w &lt; b.w; }
 
 int parent[10];
 int find(int i) { while(parent[i]&gt;=0) i=parent[i]; return i; }
-void Union(int i, int j) {
-    int ri=find(i), rj=find(j);
-    if(ri!=rj) parent[ri]=rj;
-}
+void Union(int i, int j) { int ri=find(i), rj=find(j); if(ri!=rj) parent[ri]=rj; }
 
 int main() {
     int n, e; cout &lt;&lt; "Vertices edges: "; cin &gt;&gt; n &gt;&gt; e;
@@ -561,18 +594,16 @@ int main() {
       </code>
     </div>
 
-    <!-- 10. Dijkstra's Algorithm -->
+    <!-- 10. Dijkstra -->
     <div class="card">
       <div class="card-header">
-        <h3>9. Dijkstra (Shortest Path)</h3>
+        <h3>10. Dijkstra (Shortest Path)</h3>
         <button onclick="copyCode('code10', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
       <code id="code10" class="hidden">
 /*
   Experiment 10: Dijkstra's Algorithm
-  Input: cities=5, roads, source=0 dest=4
-  Output: Shortest distance and path.
 */
 #include&lt;iostream&gt;
 #define INF 999
@@ -615,7 +646,7 @@ int main() {
     <!-- 11. Brute Force String Matching / Plagiarism -->
     <div class="card">
       <div class="card-header">
-        <h3>10. Brute Force String Matching (Plagiarism Detection)</h3>
+        <h3>11. Brute Force String Matching (Plagiarism)</h3>
         <button onclick="copyCode('code11', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
@@ -623,7 +654,7 @@ int main() {
 /*
   Experiment 11: Naive String Matching for Plagiarism
   Sample: doc1="the quick brown fox", doc2="the quick brown cat"
-  Similarity: 75%  (matching: the quick brown)
+  Similarity: 75%
 */
 #include&lt;iostream&gt;
 #include&lt;cstring&gt;
@@ -658,7 +689,6 @@ int main() {
     cout &lt;&lt; "Doc2: "; cin.getline(doc2,2000);
     char w1[MAX_W][MAX_L], w2[MAX_W][MAX_L];
     int c1=extract(doc1,w1), c2=extract(doc2,w2);
-    // unique words doc1
     char u1[MAX_W][MAX_L]; int ucnt=0;
     for(int i=0;i&lt;c1;i++) if(!contains(u1,ucnt,w1[i])) strcpy(u1[ucnt++], w1[i]);
     int match=0;
@@ -669,10 +699,10 @@ int main() {
       </code>
     </div>
 
-    <!-- 12. Set Operations (Spanish/German) -->
+    <!-- 12. Set Operations (Array version) -->
     <div class="card">
       <div class="card-header">
-        <h3>11 &13. Set Operations (Union, Intersection, Difference)</h3>
+        <h3>12. Set Operations (Union, Intersection, Difference) - Arrays</h3>
         <button onclick="copyCode('code12', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
@@ -735,7 +765,7 @@ int main() {
     <!-- 13. Optimal Binary Search Tree (OBST) -->
     <div class="card">
       <div class="card-header">
-        <h3>12. Optimal Binary Search Tree (OBST)</h3>
+        <h3>13. Optimal Binary Search Tree (OBST)</h3>
         <button onclick="copyCode('code13', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
@@ -776,55 +806,17 @@ int main() {
 }
       </code>
     </div>
-<!-- 5. DFS (Recursive) -->
-     <div class="card">
+
+    <!-- Bonus: Set Operations using STL set (only #include <set>) -->
+    <div class="card">
       <div class="card-header">
-        <h3>5. DFS Recursive (Graph)</h3>
-        <button onclick="copyCode('code5', this)">Copy</button>
+        <h3>Bonus: Set Operations (STL set only)</h3>
+        <button onclick="copyCode('code14', this)">Copy</button>
       </div>
       <pre><code>📋 Sample run in comments</code></pre>
-      <code id="code5" class="hidden">
+      <code id="code14" class="hidden">
 /*
-  Experiment 5: DFS Recursive
-  Sample: vertices=5, edges same as BFS
-  Output: DFS from 0: 0 1 3 4 2
-*/
-#include&lt;iostream&gt;
-using namespace std;
-#define MAX 10
-
-int adj[MAX][MAX], visited[MAX], n, e;
-
-void DFS(int v) {
-    visited[v]=1;
-    cout &lt;&lt; v &lt;&lt; " ";
-    for(int i=0;i&lt;n;i++)
-        if(adj[v][i] &amp;&amp; !visited[i])
-            DFS(i);
-}
-
-int main() {
-    cout &lt;&lt; "Vertices edges: "; cin &gt;&gt; n &gt;&gt; e;
-    for(int i=0;i&lt;e;i++) { int u,v; cin &gt;&gt; u &gt;&gt; v; adj[u][v]=adj[v][u]=1; }
-    cout &lt;&lt; "DFS: "; DFS(0);
-    return 0;
-}
-      </code>
-    </div> 
-    <!-- Set Operations using ONLY #include <set> -->
-<div class="card">
-  <div class="card-header">
-    <h3>12. Set Operations (Spanish & German) – STL set only</h3>
-    <button onclick="copyCode('code12', this)">Copy</button>
-  </div>
-  <pre><code>📋 Sample run in comments</code></pre>
-  <code id="code12" class="hidden">
-/*
-  Experiment 12: Sets of attendees using ONLY #include &lt;set&gt;
-  Sample: S={101,102,103}, G={102,104}
-  Union: 101 102 103 104
-  Intersection: 102
-  Difference S-G: 101 103
+  Bonus: Sets of attendees using ONLY #include &lt;set&gt;
 */
 #include &lt;iostream&gt;
 #include &lt;set&gt;
@@ -835,10 +827,7 @@ void inputSet(set&lt;int&gt; &amp;s, char name) {
     cout &lt;&lt; "Number of attendees speaking " &lt;&lt; name &lt;&lt; ": ";
     cin &gt;&gt; n;
     cout &lt;&lt; "Enter IDs: ";
-    for (int i = 0; i &lt; n; i++) {
-        cin &gt;&gt; val;
-        s.insert(val);
-    }
+    for (int i = 0; i &lt; n; i++) { cin &gt;&gt; val; s.insert(val); }
 }
 
 void display(const set&lt;int&gt; &amp;s) {
@@ -848,78 +837,26 @@ void display(const set&lt;int&gt; &amp;s) {
 
 int main() {
     set&lt;int&gt; Spanish, German;
+    inputSet(Spanish, 'S'); inputSet(German, 'G');
     
-    inputSet(Spanish, 'S');
-    inputSet(German, 'G');
-    
-    // Union: all elements from both sets
     set&lt;int&gt; UnionSet = Spanish;
     for (int x : German) UnionSet.insert(x);
     cout &lt;&lt; "Union: "; display(UnionSet);
     
-    // Intersection: common elements
     set&lt;int&gt; InterSet;
-    for (int x : Spanish)
-        if (German.find(x) != German.end())
-            InterSet.insert(x);
+    for (int x : Spanish) if (German.find(x) != German.end()) InterSet.insert(x);
     cout &lt;&lt; "Intersection: "; display(InterSet);
     
-    // Difference (S - G): in Spanish but not German
     set&lt;int&gt; DiffSet;
-    for (int x : Spanish)
-        if (German.find(x) == German.end())
-            DiffSet.insert(x);
+    for (int x : Spanish) if (German.find(x) == German.end()) DiffSet.insert(x);
     cout &lt;&lt; "Difference (S - G): "; display(DiffSet);
-    
     return 0;
 }
-  </code>
-</div>
-    <!-- Bonus: Hash Table (if needed) -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Bonus: Hash Table (Linear/Quadratic Probing)</h3>
-        <button onclick="copyCode('code14', this)">Copy</button>
-      </div>
-      <pre><code>📋 Sample run in comments</code></pre>
-      <code id="code14" class="hidden">
-/*
-  Additional: Hash Table with probing (often asked)
-*/
-#include&lt;iostream&gt;
-#include&lt;string&gt;
-#define SIZE 10
-using namespace std;
-
-struct Record { long phone; string name; bool occ; };
-Record table[SIZE];
-
-int hashf(long ph) { return ph % SIZE; }
-
-void insertLin(long ph, string nm) {
-    int idx = hashf(ph);
-    while(table[idx].occ) idx = (idx+1)%SIZE;
-    table[idx] = {ph, nm, true};
-}
-
-int searchLin(long ph) {
-    int idx = hashf(ph), comp=0;
-    while(comp &lt; SIZE) {
-        comp++;
-        if(table[idx].occ &amp;&amp; table[idx].phone==ph) return comp;
-        idx = (idx+1)%SIZE;
-    }
-    return -1;
-}
-// Quadratic similar...
-int main() { /* test code */ return 0; }
       </code>
     </div>
 
   </div>
-
   <footer>All codes include sample input/output in comments. Click copy to use.</footer>
-
   <script>
     function copyCode(id, btn) {
       const codeElem = document.getElementById(id);
@@ -936,7 +873,4 @@ int main() { /* test code */ return 0; }
     }
   </script>
 </body>
-</html> 
-
-
-
+</html>
